@@ -1,0 +1,1 @@
+console.warn("Alerta desde JS")

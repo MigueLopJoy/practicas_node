@@ -1,0 +1,1 @@
+console.error("Error desde JS")
