@@ -2,6 +2,20 @@ var servidor = require('http')
 var route = require('url')
 var files = require('fs')
 var processor = require('querystring')
+var mysql = require('mysql')
+
+
+var connection = mysql.createConnection({
+    host: 'localhost',
+    user: 'nodejs',
+    password: '1234',
+    database: 'nodejs'
+})
+
+connection.connect(err => {
+    if (err) throw err
+    console.log("conectado")
+})
 
 function readHeader(callback) {
     files.readFile("./templates/header.html", (err, data) => {
@@ -60,6 +74,32 @@ servidor.createServer(function (req, res) {
 
             case "/about":
                 files.readFile("about.html", (err, data) => {
+                    res.write(data)
+                    readFooter(footer => {
+                        res.write(footer)
+                        res.end("")
+                    })
+                })
+                break
+
+            case "/blog":
+                files.readFile("blog.html", (err, data) => {
+
+                    connection.query(`
+                            SELECT * FROM entries
+                        `, (err, result, fields) => {
+                        if (err) throw err
+                        for (let i = 0; i < result.length; i++) {
+                            res.write(`
+                                    <article>
+                                        <h3>${result[i].title}</h3>
+                                        <time>${result[i].date}</time>
+                                        <p>${result[i].text}</p>
+                                    </article>
+                                `)
+                        }
+                    })
+
                     res.write(data)
                     readFooter(footer => {
                         res.write(footer)

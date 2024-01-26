@@ -2,14 +2,13 @@ var mysql = require('mysql')
 
 var connection = mysql.createConnection({
     host: 'localhost',
-    user: 'nosejs',
-    passowrd: '1234'
+    user: 'nodejs',
+    password: '1234'
 })
 
-connection.connect(err => {
+connection.connect(function (err) {
     if (err) throw err
-    console.log(conectado)
-    connection.query('CREATE DATABASE nodejs', (err, result) => {
+    connection.query('CREATE DATABASE nodejs', function (err, result) {
         if (err) throw err
         console.log('Se ha creado la base de datos')
     })
